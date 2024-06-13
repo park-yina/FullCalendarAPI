@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>닉네임 변경</title>
+</head>
+<body>
+    <h1>닉네임 변경</h1>
+<form  th:action="@{/edit/nickname}" th:object="${userEditDTO}" method="post">
+    <label for="currentNickname">현재 닉네임</label>
+    <input type="text" id="currentNickname" th:value="${userEditDTO.nickname}" readonly>
+
+    <label for="newNickname">새로운 닉네임</label>
+    <input type="text" id="newNickname" th:field="*{nickname}">
+
+    <div th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></div>
+    
+	<button type="submin" class="btn btn-primary">닉네임 바꾸기</button>
+</form>
+
+</body>
+</html>

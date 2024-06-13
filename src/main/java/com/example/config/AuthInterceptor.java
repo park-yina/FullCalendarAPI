@@ -25,6 +25,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                 response.sendRedirect("/user/login"); // 로그인되지 않은 사용자가 마이페이지에 접근 시 로그인 페이지로 리다이렉트
                 return false;
             }
+            if("/board".equals(uri)){
+                response.sendRedirect("/user/login"); // 로그인되지 않은 사용자가 마이페이지에 접근 시 로그인 페이지로 리다이렉트
+                return false;
+            }
             return true; // 로그인되지 않은 사용자가 다른 페이지에 접근 시 요청 허용
         }
     }

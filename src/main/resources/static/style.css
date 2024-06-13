@@ -1,0 +1,96 @@
+/* Center the div containing the button */
+.center-div {
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 배치 */
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 전체 뷰포트 높이 */
+}
+
+/* Increase the button size */
+.btn-primary {
+    font-size: 1.5rem; /* 글꼴 크기 증가 */
+    padding: 1rem 2rem; /* 패딩 증가 */
+    margin-top: 10px;
+}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+#login_form{
+	margin-top: 10%;
+	margin-left: 10%;
+	padding: 3%;
+}
+
+.container {
+    background-color: #ffffff; /* 컨테이너 배경색 설정 */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.table thead th {
+    background-color: #343a40; /* 테이블 헤더 배경색 설정 */
+    color: #ffffff; /* 테이블 헤더 텍스트 색상 설정 */
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1; /* 테이블 행 호버시 배경색 설정 */
+}
+
+.post-link {
+    color: #007bff; /* 링크 색상 설정 */
+    text-decoration: none;
+}
+
+.post-link:hover {
+    text-decoration: underline; /* 링크 호버시 밑줄 추가 */
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.alert-info {
+    margin-top: 20px;
+}
+
+.btn-warning {
+    width: 100%;
+    color: #000;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-danger{
+	width:100%;
+}
