@@ -37,6 +37,5 @@ public class UserEntity {
     private byte[] profile;
 
     private Boolean social;
-    @OneToMany()
-    private Set<PainBoard> painBoards;
+
 }

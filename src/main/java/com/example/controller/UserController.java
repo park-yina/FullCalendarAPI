@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.dto.UserCreateDTO;
 import com.example.dto.UserLoginDTO;
 import com.example.dto.UserMypageDTO;
+import com.example.repository.UserRepository;
 import com.example.service.MypageService;
 import com.example.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -28,6 +29,7 @@ public class UserController {
     private final UserService userService;
     @Autowired
     private final MypageService mypageService;
+    private final UserRepository userRepository;
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("userCreateDTO", new UserCreateDTO());

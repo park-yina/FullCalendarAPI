@@ -46,7 +46,7 @@
             locale: 'ko', // 한국어 설정
             dateClick: function(info) {
                 var dateStr = info.dateStr;
-                window.location.href = '/pain/?(username=${session.username})new?date=' + dateStr;
+                window.location.href = '/pain/new?date=' + dateStr;
             }
         });
         calendar.render();
@@ -54,4 +54,3 @@
 </script>
 </body>
 </html>
-

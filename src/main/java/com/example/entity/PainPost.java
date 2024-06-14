@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "pain_boards")
-public class PainBoard {
+public class PainPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -59,6 +59,7 @@ public class UserService {
         return userEditDTO;
     }
 
+
     public boolean isNicknameTaken(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
