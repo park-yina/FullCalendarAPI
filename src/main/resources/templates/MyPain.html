@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <style>
+        .red-text {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div th:if="${#lists.isEmpty(posts)}">
+        <p>게시물이 없습니다.</p>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>게시물 내용</th>
+            <th>날짜</th>
+            <th>시작 시간</th>
+            <th>종료 시간</th>
+            <th>약 복용 여부</th>
+            <th>예방약 복용 여부</th>
+            <th>복용 약 이름</th>
+            <th>통증 정도</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${posts}">
+            <td th:text="${post.content}"></td>
+            <td th:text="${post.date}"></td>
+            <td th:text="${post.start}"></td>
+            <td th:text="${post.end}"></td>
+            <td th:text="${post.pill ? '복용' : '미복용'}"></td>
+            <td th:text="${post.prePill ? '예방약 복용' : '예방약 미복용'}"></td>
+            <td th:text="${post.pillName}"></td>
+            <td th:text="${post.severity}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<script th:src="@{/bootstrap.min.js}"></script>
+</body>
+</html>
