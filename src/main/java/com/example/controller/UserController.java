@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.dto.UserCreateDTO;
 import com.example.dto.UserLoginDTO;
 import com.example.dto.UserMypageDTO;
+import com.example.entity.UserEntity;
 import com.example.repository.UserRepository;
 import com.example.service.MypageService;
 import com.example.service.UserService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.util.ImgUtil;
 import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/user")
@@ -58,14 +60,32 @@ public class UserController {
         }
 
         try {
+            // 사용자 인증 처리
             userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
+
+            // 세션에 사용자 이름 저장
             session.setAttribute("username", userLoginDTO.getUsername());
-            return "redirect:/"; // 로그인 성공 시 홈으로 리다이렉트
+
+            // 사용자 이름으로 사용자 엔티티 검색
+            Optional<UserEntity> userOptional = userRepository.findByUsername(userLoginDTO.getUsername());
+            if (userOptional.isPresent()) {
+                UserEntity user = userOptional.get();
+                Long userId = user.getId();
+
+                // 세션에 사용자 ID 저장
+                session.setAttribute("userId", userId);
+
+                return "redirect:/"; // 로그인 성공 시 홈으로 리다이렉트
+            } else {
+                bindingResult.reject("loginFail", "Invalid username or password");
+                return "login"; // 사용자를 찾지 못한 경우 로그인 페이지로 이동
+            }
         } catch (Exception e) {
             bindingResult.reject("loginFail", "Invalid username or password");
             return "login"; // 로그인 실패 시 로그인 페이지로 이동
         }
     }
+
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // 로그아웃 시 세션 무효화

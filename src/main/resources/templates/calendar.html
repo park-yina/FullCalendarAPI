@@ -3,14 +3,18 @@
 <head>
     <title>Calendar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css">
-    <link rel="stylesheet" th:href="@{/style.css}">
     <style>
+        body {
+            margin: 20px;
+            padding: 0;
+            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+        }
         #calendar {
-            max-width:max-content;
+            max-width: 900px;
             margin: 0 auto;
         }
         #events {
-            max-width: fit-content;
+            max-width: 900px;
             margin: 20px auto;
             padding: 10px;
             border: 1px solid #ccc;
@@ -39,7 +43,7 @@
 <div id="calendar"></div>
 <div id="userInfo" th:data-userId="${userId}" hidden></div>
 <div id="events">
-    <h2>오늘의 통증기록</h2>
+    <h2>오늘의 일정</h2>
     <p id="event-count"></p>
     <div id="event-list"></div>
 </div>
@@ -57,7 +61,7 @@
             headerToolbar: {
                 start: 'prev next today',
                 center: 'title',
-                end: 'dayGridMonth'
+                end: 'dayGridMonth,dayGridWeek,dayGridDay'
             },
             titleFormat: function(date) {
                 return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
@@ -70,7 +74,6 @@
             dateClick: function(info) {
                 var dateStr = info.dateStr;
                 fetchEventsByDate(dateStr);
-                window.location.href = '/pain/new?userId=' + userId + '&date=' + dateStr;
             },
             events: function(fetchInfo, successCallback, failureCallback) {
                 fetch('/pain/events')
@@ -109,41 +112,23 @@
                 events.forEach(event => {
                     var eventItem = document.createElement('div');
                     eventItem.classList.add('event-item');
-
-                    // 통증 정도에 따라 스타일 클래스 추가
-                    var severityClass = '';
-                    if (event.severity >= 0 && event.severity <= 3) {
-                        severityClass = 'mild-pain'; // 연한 민트색
-                    } else if (event.severity > 3 && event.severity <= 6) {
-                        severityClass = 'moderate-pain'; // 중간 민트색
-                    } else if (event.severity >= 7 && event.severity <= 9) {
-                        severityClass = 'severe-pain'; // 진한 민트색
-                    } else {
-                        severityClass = 'red'; // 진한 민트색
-                    }
-
                     eventItem.innerHTML = `
                         <p><strong>내용:</strong> ${event.content}</p>
                         <p><strong>시작 시간:</strong> ${event.start}</p>
-                        <p><strong>종료 시간:</strong> ${event.end}</p>
+                       <p><strong>종료 시간:</strong> ${event.end != null ? event.end : '종일'}</p>
+
                         <p><strong>약 복용:</strong> ${event.pill ? '예' : '아니오'}</p>
                         <p><strong>약 이름:</strong> ${event.pillName || '없음'}</p>
                         <p><strong>통증 정도:</strong> ${event.severity}</p>
                     `;
-
-                    // 스타일 클래스 추가
-                    eventItem.classList.add(severityClass);
-
-
                     eventListDiv.appendChild(eventItem);
                 });
             }
         }
 
         function displayEventCount(count) {
-            eventCountP.textContent = `총 ${count}개의 기록이 있습니다.`;
+            eventCountP.textContent = `총 ${count}개의 일정이 있습니다.`;
         }
-
 
         calendar.render();
     });

@@ -21,7 +21,6 @@
     <table class="table">
         <thead>
         <tr>
-            <th>게시물 내용</th>
             <th>날짜</th>
             <th>시작 시간</th>
             <th>종료 시간</th>
@@ -33,13 +32,12 @@
         </thead>
         <tbody>
         <tr th:each="post : ${posts}">
-            <td th:text="${post.content}"></td>
             <td th:text="${post.date}"></td>
             <td th:text="${post.start}"></td>
             <td th:text="${post.end}"></td>
             <td th:text="${post.pill ? '복용' : '미복용'}"></td>
-            <td th:text="${post.prePill ? '예방약 복용' : '예방약 미복용'}"></td>
-            <td th:text="${post.pillName}"></td>
+            <td th:text="${post.pre_pill ? '예방약 복용' : '예방약 미복용'}"></td>
+            <td th:text="${post.pill_name}"></td>
             <td th:text="${post.severity}"></td>
         </tr>
         </tbody>
