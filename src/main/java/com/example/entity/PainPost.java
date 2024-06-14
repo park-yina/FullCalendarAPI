@@ -26,6 +26,9 @@ public class PainPost {
     private boolean pill;
     private boolean pre_pill;
     private String pill_name;
+    private boolean disclosure;
+
+    private String author;
     @Max(10)
     private int severity;
 }

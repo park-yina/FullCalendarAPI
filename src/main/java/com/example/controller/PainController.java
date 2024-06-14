@@ -1,10 +1,12 @@
 package com.example.controller;
 
 import com.example.dto.PainPostDTO;
+import com.example.dto.UserEditDTO;
 import com.example.entity.PainPost;
 import com.example.entity.UserEntity;
 import com.example.repository.PainRepository;
 import com.example.repository.UserRepository;
+import com.example.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/pain")
 public class PainController {
     private final UserRepository userRepository;
+    private final UserService userService;
     private final PainRepository painPostRepository;
 
     @GetMapping("/board")
@@ -84,9 +87,10 @@ public class PainController {
             return "redirect:/user/login"; // 유효하지 않은 userId인 경우
         }
         UserEntity user = userOptional.get();
-
+        UserEditDTO author = userService.getUserName(String.valueOf(sessionUsername));
         // PainPost 엔티티 생성 및 데이터 설정
         PainPost painPost = new PainPost();
+        painPost.setAuthor(author.getNickname());
         painPost.setUser(user); // UserEntity 설정
         painPost.setContent(painPostDTO.getContent());
         painPost.setDate(painPostDTO.getDate());
@@ -95,6 +99,7 @@ public class PainController {
         painPost.setPill(painPostDTO.isPill());
         painPost.setPill_name(painPostDTO.getPill_name());
         painPost.setSeverity(painPostDTO.getSeverity());
+
 
         // 저장 처리 로직
         painPostRepository.save(painPost);
@@ -122,8 +127,10 @@ public class PainController {
         dto.setStart(painPost.getStart());
         dto.setEnd(painPost.getEnd());
         dto.setPill(painPost.isPill());
+        dto.setDisclosure(painPost.isDisclosure());
         dto.setPill_name(painPost.getPill_name());
         dto.setSeverity(painPost.getSeverity());
+        dto.setAuthor(painPost.getAuthor());
         return dto;
     }
 }

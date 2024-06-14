@@ -15,7 +15,8 @@
         <a th:href="@{/user/mypage}" class="btn btn-primary" title="로그인 이후 이용 가능합니다.">내 정보 수정하기</a>
         <a th:href="@{/user/logout}" class="btn btn-primary">로그아웃하기</a>
         <a th:href="@{/user/info}" class="btn btn-primary">마이페이지</a>
-        <a th:href="@{/pain/board(username=${session.username})}" class="btn btn-primary">비밀 캘린더 바로가기</a>
+        <a th:href="@{/pain/board(username=${session.username})}" class="btn btn-primary">나의 통증 일기 등록</a>
+        <a th:href="@{/pain/modify(username=${session.username})}" class="btn btn-primary">통증일기 모아보기</a>
 
     </div>
 
