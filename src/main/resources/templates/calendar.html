@@ -1,37 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="kr">
 <head>
+    <title>Calendar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css">
     <style>
         body {
-            margin: 40px 10px;
+            margin: 20px;
             padding: 0;
             font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
         }
-
         #calendar {
             max-width: 900px;
             margin: 0 auto;
         }
-        :root {
-            --fc-border-color: black;
-            --fc-daygrid-event-dot-width: 5px;
-        }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>
 </head>
 <body>
-<!-- 캘린더를 렌더링할 div -->
 <div id="calendar"></div>
+<div id="userInfo" th:data-userId="${userId}" hidden></div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
+        var userInfoDiv = document.getElementById('userInfo');
+        var userId = userInfoDiv.getAttribute('data-userId');
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
-            headerToolbar: { // 헤더에 표시할 툴 바
+            initialView: 'dayGridMonth',
+            headerToolbar: {
                 start: 'prev next today',
                 center: 'title',
                 end: 'dayGridMonth,dayGridWeek,dayGridDay'
@@ -39,16 +37,17 @@
             titleFormat: function(date) {
                 return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
             },
-            selectable: true, // 달력 일자 드래그 설정가능
+            selectable: true,
             droppable: true,
             editable: true,
-            nowIndicator: true, // 현재 시간 마크
-            locale: 'ko', // 한국어 설정
+            nowIndicator: true,
+            locale: 'ko',
             dateClick: function(info) {
                 var dateStr = info.dateStr;
-                window.location.href = '/pain/new?date=' + dateStr;
+                window.location.href = '/pain/new?userId=' + userId + '&date=' + dateStr;
             }
         });
+
         calendar.render();
     });
 </script>

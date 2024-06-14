@@ -32,34 +32,38 @@
 <h1>Pain Post Form</h1>
 <form th:action="@{/pain/save}" th:object="${painPostDTO}" method="post">
     <div class="form-group">
-        <label for="date">Date:</label>
+        <label for="date">날짜:</label>
         <input type="date" id="date" name="date" th:field="*{date}" required>
     </div>
     <div class="form-group">
-        <label for="start">Start Time:</label>
+        <label for="start">통증 시작 시간:</label>
         <input type="time" id="start" name="start" th:field="*{start}" required>
     </div>
     <div class="form-group">
-        <label for="end">End Time:</label>
+        <label for="end">끝나는 시간:</label>
         <input type="time" id="end" name="end" th:field="*{end}" required>
     </div>
     <div class="form-group">
-        <label for="content">Content:</label>
+        <label for="content">비고:</label>
         <textarea id="content" name="content" th:field="*{content}" required></textarea>
     </div>
     <div class="form-group">
-        <label for="pill">Took Medicine:</label>
+        <label for="pill">약물 복용 여부:</label>
         <input type="checkbox" id="pill" name="pill" th:field="*{pill}">
     </div>
     <div class="form-group">
-        <label for="pill_name">Medicine Name:</label>
+        <label for="pre_pill">예방약 복용 여부:</label>
+        <input type="checkbox" id="pre_pill" name="pill" th:field="*{pre_pill}">
+    </div>
+    <div class="form-group">
+        <label for="pill_name">약물 이름:</label>
         <input type="text" id="pill_name" name="pill_name" th:field="*{pill_name}">
     </div>
     <div class="form-group">
-        <label for="severity">Severity (0-10):</label>
+        <label for="severity">통증 강도 (0-10):</label>
         <input type="number" id="severity" name="severity" min="0" max="10" th:field="*{severity}" required>
     </div>
-    <button type="submit">Save</button>
+    <button type="submit">저장하기</button>
 </form>
 
 <div id="calendar"></div>

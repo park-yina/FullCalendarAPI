@@ -1,24 +1,13 @@
-package com.example.entity;
+package com.example.dto;
 
-import jakarta.persistence.*;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
-@Entity
-@Table(name = "pain_boards")
-public class PainPost {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
-
+public class PainPostDTO {
     private String content;
     private String date;
     private String start;
