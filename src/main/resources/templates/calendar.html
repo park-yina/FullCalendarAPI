@@ -13,6 +13,28 @@
             max-width: 900px;
             margin: 0 auto;
         }
+        #events {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        #events h2 {
+            margin-top: 0;
+        }
+        .event-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .event-item p {
+            margin: 5px 0;
+        }
+        #event-count {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>
@@ -20,12 +42,19 @@
 <body>
 <div id="calendar"></div>
 <div id="userInfo" th:data-userId="${userId}" hidden></div>
+<div id="events">
+    <h2>오늘의 일정</h2>
+    <p id="event-count"></p>
+    <div id="event-list"></div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var userInfoDiv = document.getElementById('userInfo');
         var userId = userInfoDiv.getAttribute('data-userId');
+        var eventListDiv = document.getElementById('event-list');
+        var eventCountP = document.getElementById('event-count');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -44,9 +73,61 @@
             locale: 'ko',
             dateClick: function(info) {
                 var dateStr = info.dateStr;
-                window.location.href = '/pain/new?userId=' + userId + '&date=' + dateStr;
+                fetchEventsByDate(dateStr);
+            },
+            events: function(fetchInfo, successCallback, failureCallback) {
+                fetch('/pain/events')
+                    .then(response => response.json())
+                    .then(data => {
+                        successCallback(data);
+                        // 오늘 날짜의 일정을 표시
+                        var todayStr = new Date().toISOString().split('T')[0];
+                        fetchEventsByDate(todayStr);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching events:', error);
+                        failureCallback(error);
+                    });
             }
         });
+
+        function fetchEventsByDate(dateStr) {
+            fetch('/pain/events')
+                .then(response => response.json())
+                .then(events => {
+                    var eventsForDate = events.filter(event => event.date === dateStr);
+                    displayEvents(eventsForDate);
+                    displayEventCount(eventsForDate.length);
+                })
+                .catch(error => {
+                    console.error('Error fetching events:', error);
+                });
+        }
+
+        function displayEvents(events) {
+            eventListDiv.innerHTML = '';
+            if (events.length === 0) {
+                eventListDiv.innerHTML = '<p>일정이 없습니다.</p>';
+            } else {
+                events.forEach(event => {
+                    var eventItem = document.createElement('div');
+                    eventItem.classList.add('event-item');
+                    eventItem.innerHTML = `
+                        <p><strong>내용:</strong> ${event.content}</p>
+                        <p><strong>시작 시간:</strong> ${event.start}</p>
+                        <p><strong>종료 시간:</strong> ${event.end}</p>
+                        <p><strong>약 복용:</strong> ${event.pill ? '예' : '아니오'}</p>
+                        <p><strong>약 이름:</strong> ${event.pillName || '없음'}</p>
+                        <p><strong>통증 정도:</strong> ${event.severity}</p>
+                    `;
+                    eventListDiv.appendChild(eventItem);
+                });
+            }
+        }
+
+        function displayEventCount(count) {
+            eventCountP.textContent = `총 ${count}개의 일정이 있습니다.`;
+        }
 
         calendar.render();
     });

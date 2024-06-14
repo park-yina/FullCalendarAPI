@@ -11,13 +11,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/pain")
 public class PainController {
     private final UserRepository userRepository;
+    private final PainRepository painPostRepository;
 
     @GetMapping("/board")
     public String painBoard(@RequestParam("username") String username, HttpSession session, Model model) {
@@ -72,9 +76,55 @@ public class PainController {
             return "redirect:/user/login";
         }
 
-        // 여기에 저장 처리 로직 수행
-        // session.getAttribute("userId")를 사용하여 사용자 id를 가져올 수 있음
+        // 세션에서 userId 가져오기
+        Long userId = (Long) session.getAttribute("userId");
+
+        Optional<UserEntity> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            return "redirect:/user/login"; // 유효하지 않은 userId인 경우
+        }
+        UserEntity user = userOptional.get();
+
+        // PainPost 엔티티 생성 및 데이터 설정
+        PainPost painPost = new PainPost();
+        painPost.setUser(user); // UserEntity 설정
+        painPost.setContent(painPostDTO.getContent());
+        painPost.setDate(painPostDTO.getDate());
+        painPost.setStart(painPostDTO.getStart());
+        painPost.setEnd(painPostDTO.getEnd());
+        painPost.setPill(painPostDTO.isPill());
+        painPost.setPill_name(painPostDTO.getPill_name());
+        painPost.setSeverity(painPostDTO.getSeverity());
+
+        // 저장 처리 로직
+        painPostRepository.save(painPost);
 
         return "redirect:/pain/board?username=" + sessionUsername; // 저장 후 보드 화면으로 리다이렉트
     }
+
+    @GetMapping("/events")
+    @ResponseBody
+    public List<PainPostDTO> getPainEvents(HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return Collections.emptyList(); // 세션에 사용자 ID가 없는 경우 빈 리스트 반환
+        }
+
+        List<PainPost> painPosts = painPostRepository.findByUserId(userId);
+        return painPosts.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private PainPostDTO convertToDTO(PainPost painPost) {
+        PainPostDTO dto = new PainPostDTO();
+        dto.setContent(painPost.getContent());
+        dto.setDate(painPost.getDate());
+        dto.setStart(painPost.getStart());
+        dto.setEnd(painPost.getEnd());
+        dto.setPill(painPost.isPill());
+        dto.setPill_name(painPost.getPill_name());
+        dto.setSeverity(painPost.getSeverity());
+        return dto;
+    }
 }
+

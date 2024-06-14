@@ -41,11 +41,11 @@
     </div>
     <div class="form-group">
         <label for="end">끝나는 시간:</label>
-        <input type="time" id="end" name="end" th:field="*{end}" required>
+        <input type="time" id="end" name="end" th:field="*{end}" >
     </div>
     <div class="form-group">
         <label for="content">비고:</label>
-        <textarea id="content" name="content" th:field="*{content}" required></textarea>
+        <textarea id="content" name="content" th:field="*{content}" ></textarea>
     </div>
     <div class="form-group">
         <label for="pill">약물 복용 여부:</label>
@@ -61,7 +61,7 @@
     </div>
     <div class="form-group">
         <label for="severity">통증 강도 (0-10):</label>
-        <input type="number" id="severity" name="severity" min="0" max="10" th:field="*{severity}" required>
+        <input type="number" id="severity" name="severity" min="0" max="10" th:field="*{severity}" >
     </div>
     <button type="submit">저장하기</button>
 </form>
