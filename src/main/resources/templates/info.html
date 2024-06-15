@@ -18,7 +18,7 @@
             <input type="text" class="form-control" id="nickname" th:value="${user.nickname}" readonly>
         </div>
         <div class="form-group">
-            <label for="profileImage">프로필 사진</label>
+            <label for="profile">프로필 사진</label>
             <div>
                 <!-- Base64로 인코딩된 이미지를 보여줍니다 -->
                 <img th:src="${'data:image/png;base64,' + user.profileBase64}" alt="프로필 사진" class="img-thumbnail">

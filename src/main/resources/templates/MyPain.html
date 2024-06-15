@@ -5,19 +5,12 @@
     <title>게시판</title>
     <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/style.css}">
-    <style>
-        .red-text {
-            color: red;
-        }
-    </style>
 </head>
 <body>
 <div class="container">
-
     <div th:if="${#lists.isEmpty(posts)}">
         <p>게시물이 없습니다.</p>
     </div>
-
     <table class="table">
         <thead>
         <tr>
@@ -30,10 +23,10 @@
             <th>통증 정도</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="post : ${posts}">
-            <td th:text="${post.date}"></td>
-            <td th:text="${post.start}"></td>
+        <tbody id="post-tbody">
+        <tr th:each="post : ${posts}" th:data-severity="${post.severity}" th:attr="data-post-id=${post.id}">
+            <td th:text="${post.date}" th:data-date="${post.date}"></td>
+            <td th:text="${post.start}" th:data-start="${post.start}"></td>
             <td th:text="${post.end}"></td>
             <td th:text="${post.pill ? '복용' : '미복용'}"></td>
             <td th:text="${post.pre_pill ? '예방약 복용' : '예방약 미복용'}"></td>
@@ -42,8 +35,54 @@
         </tr>
         </tbody>
     </table>
+    <div id="userInfo" th:data-userId="${userId}" hidden></div>
 
 </div>
 <script th:src="@{/bootstrap.min.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tbody = document.getElementById('post-tbody');
+        var rows = tbody.getElementsByTagName('tr');
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var severity = row.getAttribute('data-severity');
+
+            // 통증 정도에 따라 스타일 클래스 추가
+            if (severity >= 0 && severity <= 3) {
+                row.classList.add('severity-low');
+            } else if (severity >= 4 && severity <= 6) {
+                row.classList.add('severity-moderate');
+            } else if (severity >= 7 && severity <= 9) {
+                row.classList.add('severity-high');
+            } else if (severity == 10) {
+                row.classList.add('severity-very-high');
+            }
+        }
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tbody = document.getElementById('post-tbody');
+        var rows = tbody.getElementsByTagName('tr');
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+
+            // 클릭 이벤트 리스너 추가
+            row.addEventListener('click', function() {
+                // 데이터 가져오기
+                var postId = this.getAttribute('data-post-id'); // 포스트 ID 가져오기
+
+                var userId = document.getElementById('userInfo').getAttribute('data-userId'); // 사용자 ID 가져오기
+
+                // URL 생성 및 이동
+                var url = '/my/post/details?id=' + postId + '&userId=' + userId;
+                window.location.href = url;
+            });
+        }
+    });
+</script>
 </body>
 </html>
+

@@ -7,19 +7,18 @@
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-    <div class="container">
-        <h2 class="text-center">정보수정하기</h2>
-            <div class="profile-actions">
-			<span>id: <span th:text="${userMypageDTO.username}"></span><span> 님</span>
-			<div></div>
-			<span>닉네임: <span th:text="${userMypageDTO.nickname}"></span><span>님</span>
-	<a th:href="@{/edit/nickname}" class="btn btn-primary">닉네임 변경하기</a>
-	<a th:href="@{/edit/password}" class="btn btn-primary">비밀번호 변경하기</a>
-	<a th:href="@{/edit/profile}" class="btn btn-primary">프로필사진 변경하기</a>
-
-            </div>
+<div class="container">
+    <h2 class="text-center">정보수정하기</h2>
+    <div class="profile-actions">
+        <span>id: <span th:text="${userMypageDTO.username}"></span><span> 님</span></span>
+        <div>
+            <span>닉네임: <span th:text="${userMypageDTO.nickname}"></span><span>님</span></span>
         </div>
+        <a th:href="@{/edit/nickname}" class="btn btn-primary">닉네임 변경하기</a>
+        <a th:href="@{/edit/password}" class="btn btn-primary">비밀번호 변경하기</a>
+        <a th:href="@{/edit/profile}" class="btn btn-primary">프로필사진 변경하기</a>
     </div>
-    <script th:src="@{/bootstrap.min.js}"></script>
+</div>
+<script th:src="@{/bootstrap.min.js}"></script>
 </body>
 </html>

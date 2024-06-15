@@ -8,18 +8,21 @@
 
 </head>
 <body>
-    <div class="center-div">
+<nav class="navbar">
+    <a th:href="@{/user/info}">마이페이지</a>
+    <a th:href="@{/pain/board(username=${session.username})}">나의 통증 일기 등록</a>
+    <a th:href="@{/my/(username=${session.username})}">통증일기 모아보기</a>
+</nav>
+
+<div class="container">
+    <div class="btn-group">
         <a th:href="@{/user/signup}" class="btn btn-primary">회원가입하기</a>
-        <div></div>
         <a th:href="@{/user/login}" class="btn btn-primary">로그인하기</a>
         <a th:href="@{/user/mypage}" class="btn btn-primary" title="로그인 이후 이용 가능합니다.">내 정보 수정하기</a>
         <a th:href="@{/user/logout}" class="btn btn-primary">로그아웃하기</a>
-        <a th:href="@{/user/info}" class="btn btn-primary">마이페이지</a>
-        <a th:href="@{/pain/board(username=${session.username})}" class="btn btn-primary">나의 통증 일기 등록</a>
-        <a th:href="@{/my/(username=${session.username})}" class="btn btn-primary">통증일기 모아보기</a>
-
     </div>
+</div>
 
-    <script th:src="@{/bootstrap.min.js}"></script>
+<script th:src="@{/bootstrap.min.js}"></script>
 </body>
 </html>

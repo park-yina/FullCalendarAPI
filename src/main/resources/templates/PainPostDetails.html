@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시물 상세 정보</title>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>게시물 상세 정보</h1>
+    <p>날짜: <span th:text="${painPost.date}"></span></p>
+    <p>시작 시간: <span th:text="${painPost.start}"></span></p>
+    <p>종료 시간: <span th:text="${painPost.end}"></span></p>
+    <p>약 복용 여부: <span th:text="${painPost.pill ? '복용' : '미복용'}"></span></p>
+    <p>예방약 복용 여부: <span th:text="${painPost.pre_pill ? '예방약 복용' : '예방약 미복용'}"></span></p>
+    <p>복용 약 이름: <span th:text="${painPost.pill_name}"></span></p>
+    <p>통증 정도: <span th:text="${painPost.severity}"></span></p>
+    <p>비고: <span th:text="${painPost.content}"></span></p> <!-- 내용 정보도 포함 -->
+    <p>지속 시간: <span th:text="${duration}"></span></p>
+    <a th:href="@{/my/?username={username}(username=${session.username})}" class="btn btn-primary">목록으로 돌아가기</a>
+
+</div>
+<script th:src="@{/bootstrap.min.js}"></script>
+</body>
+</html>

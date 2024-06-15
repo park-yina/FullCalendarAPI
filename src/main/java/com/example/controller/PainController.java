@@ -108,7 +108,7 @@ public class PainController {
         // 저장 처리 로직
         painPostRepository.save(painPost);
 
-        return "redirect:/my?username=" + sessionUsername;
+        return "redirect:/pain/board?username=" + sessionUsername;
     }
 
     @GetMapping("/events")

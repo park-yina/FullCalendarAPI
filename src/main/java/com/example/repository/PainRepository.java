@@ -9,6 +9,5 @@ import java.util.Optional;
 
 public interface PainRepository extends JpaRepository<PainPost, Long> {
     List<PainPost> findByUserId(Long userId);
-
-
+    //Optional<PainPost>findById(Long postId);
 }
