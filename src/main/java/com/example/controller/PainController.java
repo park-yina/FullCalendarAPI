@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class PainController {
     }
 
     @PostMapping("/save")
-    public String savePain(@ModelAttribute("painPostDTO") PainPostDTO painPostDTO, HttpSession session) {
+    public String savePain(@ModelAttribute("painPostDTO") PainPostDTO painPostDTO, HttpSession session,Model model) {
         Object sessionUsername = session.getAttribute("username");
 
         if (sessionUsername == null) {
@@ -92,12 +93,19 @@ public class PainController {
         painPost.setUser(user); // UserEntity 설정
         painPost.setContent(painPostDTO.getContent());
         painPost.setDate(painPostDTO.getDate());
-        painPost.setStart(painPostDTO.getStart());
-        painPost.setEnd(painPostDTO.getEnd());
         painPost.setPill(painPostDTO.isPill());
         painPost.setPill_name(painPostDTO.getPill_name());
         painPost.setSeverity(painPostDTO.getSeverity());
-
+        LocalTime startTime = LocalTime.parse(painPostDTO.getStart());
+        LocalTime endTime=LocalTime.parse(painPostDTO.getEnd());
+        if(endTime.isBefore(startTime)){
+            model.addAttribute("error","시간 설정이 잘못되었습니다.");
+            return "error";
+        }
+        else{
+            painPost.setStart(painPostDTO.getStart());
+            painPost.setEnd(painPostDTO.getEnd());
+        }
         if (painPost.getPill_name() == null || painPost.getPill_name().isEmpty()) {
             // painPost.getPill_name()이 null이거나 비어 있는 경우 처리
             painPost.setPill_name("없음");
