@@ -11,6 +11,8 @@
     <div th:if="${#lists.isEmpty(posts)}">
         <p>게시물이 없습니다.</p>
     </div>
+    <a th:href="@{/}" class="btn btn-secondary back-button">홈으로 돌아가기</a>
+
     <table class="table">
         <thead>
         <tr>
