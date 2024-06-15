@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'게시물 상세 정보 - ' + ${post.title}"></title>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="post-header">
+        <div th:text="'게시물 제목: '"></div>
+        <div th:text="${post.title}"></div>
+    </div>
+    <hr>
+    <div class="post-content">
+        <div th:text="'게시물 내용: '"></div>
+        <div th:utext="${@commonUtil.markdown(post.content)}"></div>
+    </div>
+    <hr>
+    <div class="post-content">
+        <div th:text="' 마지막 수정일자:'"></div>
+        <div th:text="${post.updatedDate}"></div>
+        <hr>
+        <div class="form-group" th:if="${profileBase64 != null}">
+            <label for="profileImage">첨부사진</label>
+            <div>
+                <!-- Base64로 인코딩된 이미지를 보여줍니다 -->
+                <img th:attr="src=${'data:image/png;base64,' + profileBase64}" alt="프로필 사진" class="profile-image">
+            </div>
+        </div>
+
+        <a th:href="@{|/board/${post.boardType}|}" class="btn btn-primary">게시판으로 돌아가기</a>
+
+        <!-- 게시물 수정 버튼 -->
+        <a th:href="@{|/board/edit/${postId}|}" class="btn btn-warning">수정</a>
+
+        <!-- 게시물 삭제 버튼 -->
+        <form th:action="@{|/board/delete/${postId}|}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-danger">삭제</button>
+        </form>
+    </div>
+    <script th:src="@{/bootstrap.min.js}"></script>
+</body>
+</html>
