@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -96,25 +97,39 @@ public class PainController {
         painPost.setPill(painPostDTO.isPill());
         painPost.setPill_name(painPostDTO.getPill_name());
         painPost.setSeverity(painPostDTO.getSeverity());
-        LocalTime startTime = LocalTime.parse(painPostDTO.getStart());
-        LocalTime endTime=LocalTime.parse(painPostDTO.getEnd());
-        if(endTime.isBefore(startTime)){
-            model.addAttribute("error","시간 설정이 잘못되었습니다.");
-            return "error";
-        }
-        else{
-            painPost.setStart(painPostDTO.getStart());
-            painPost.setEnd(painPostDTO.getEnd());
-        }
-        if (painPost.getPill_name() == null || painPost.getPill_name().isEmpty()) {
-            // painPost.getPill_name()이 null이거나 비어 있는 경우 처리
-            painPost.setPill_name("없음");
-        }
-        if(painPost.getEnd()==null||painPost.getEnd().isEmpty()){
+
+        String startTimeStr = painPostDTO.getStart();
+        String endTimeStr = painPostDTO.getEnd();
+
+// 시작 시간 설정
+        painPost.setStart(startTimeStr);
+
+// 종료 시간 설정 및 유효성 검사
+        if (endTimeStr == null || endTimeStr.isEmpty() || !endTimeStr.equals("종일")) {
+            try {
+                LocalTime startTime = LocalTime.parse(startTimeStr);
+                LocalTime endTime = LocalTime.parse(endTimeStr);
+
+                if (endTime.isBefore(startTime)) {
+                    painPost.setEnd("잘못된 시간 입력입니다.");
+                } else {
+                    painPost.setEnd(endTimeStr);
+                }
+            } catch (DateTimeParseException e) {
+                painPost.setEnd("종일");
+            }
+        } else {
             painPost.setEnd("종일");
         }
-        // 저장 처리 로직
+
+// 약물 이름이 비어 있는 경우 "없음"으로 설정
+        if (painPost.getPill_name() == null || painPost.getPill_name().isEmpty()) {
+            painPost.setPill_name("없음");
+        }
+
+// 저장 처리 로직
         painPostRepository.save(painPost);
+
 
         return "redirect:/pain/board?username=" + sessionUsername;
     }
@@ -139,7 +154,6 @@ public class PainController {
         dto.setContent(painPost.getContent());
         dto.setDate(painPost.getDate());
         dto.setStart(painPost.getStart());
-
         dto.setPill(painPost.isPill());
         dto.setPre_pill(painPost.isPre_pill());
         dto.setDisclosure(painPost.isDisclosure());
