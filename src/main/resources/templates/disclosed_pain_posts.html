@@ -20,6 +20,7 @@
             <th>복용 약 이름</th>
             <th>작성자</th>
             <th>통증 강도</th>
+            <th>조회수</th>
         </tr>
         </thead>
         <tbody>
@@ -32,6 +33,7 @@
             <td th:text="${painPost.pill_name}"></td>
             <td th:text="${painPost.author}"></td>
             <td th:text="${painPost.severity}"></td>
+            <td th:text="${painPost.views}"></td>
         </tr>
         </tbody>
     </table>

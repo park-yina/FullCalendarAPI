@@ -31,7 +31,6 @@ public class MyPainController {
 
         Long userId = (Long) session.getAttribute("userId");
         List<PainPost> painPosts = painRepository.findByUserIdOrderByDateAsc(userId);
-        painRepository.findAllOrderByDateAsc();
         model.addAttribute("userId", userId);
         model.addAttribute("posts", painPosts);
         return "MyPain"; // 이 부분은 뷰 파일의 이름입니다.

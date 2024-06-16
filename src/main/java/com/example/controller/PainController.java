@@ -101,7 +101,7 @@ public class PainController {
 
         painPost.setPill_name(painPostDTO.getPill_name());
 
-        painPost.setViews(painPostDTO.getViews());
+        painPost.setViews(0L);
         painPost.setSeverity(painPostDTO.getSeverity());
         String startTimeStr = painPostDTO.getStart();
         String endTimeStr = painPostDTO.getEnd();
@@ -163,7 +163,7 @@ public class PainController {
         dto.setPre_pill(painPost.isPre_pill());
         dto.setDisclosure(painPost.isDisclosure());
         dto.setPill_name(painPost.getPill_name());
-        dto.setViews(painPost.getViews());
+        dto.setViews(0L);
         dto.setSeverity(painPost.getSeverity());
         dto.setAuthor(painPost.getAuthor());
         return dto;
