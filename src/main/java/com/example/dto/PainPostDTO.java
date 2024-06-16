@@ -9,6 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PainPostDTO {
+
+    private Long id;
+
     private String content;
     private String date;
     private String start;

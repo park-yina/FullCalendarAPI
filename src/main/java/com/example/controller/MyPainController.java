@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.PainPostDTO;
 import com.example.entity.PainPost;
 import com.example.repository.PainRepository;
 import com.example.service.PainPostService;
@@ -31,7 +32,8 @@ public class MyPainController {
         }
 
         Long userId = (Long) session.getAttribute("userId");
-        List<PainPost> painPosts = painRepository.findByUserId(userId);
+        List<PainPost> painPosts = painRepository.findByUserIdOrderByDateAsc(userId);
+        painRepository.findAllOrderByDateAsc();
         model.addAttribute("userId", userId);
         model.addAttribute("posts", painPosts);
         return "MyPain"; // 이 부분은 뷰 파일의 이름입니다.
@@ -53,6 +55,7 @@ public class MyPainController {
                     String duration = painPostService.calculateDuration(painPost);
                     model.addAttribute("duration", duration);
                 }
+
                 return "PainPostDetails"; // 뷰 파일 이름
             } else {
                 model.addAttribute("error","게시물이 없습니다.");

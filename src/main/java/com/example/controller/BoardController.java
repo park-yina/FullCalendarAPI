@@ -115,7 +115,6 @@ public class BoardController {
             LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
             postEntity.setCreatedDate(now);
             postEntity.setUpdatedDate(now);
-            postEntity.setViews(0L);
             // 게시물 저장
             postRepository.save(postEntity);
 

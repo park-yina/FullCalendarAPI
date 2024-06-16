@@ -38,6 +38,7 @@ public class PainPostService {
                 .collect(Collectors.toList());
     }
 
+
     private PainPostDTO convertToDTO(PainPost painPost) {
         PainPostDTO dto = new PainPostDTO();
         dto.setContent(painPost.getContent());
@@ -50,7 +51,8 @@ public class PainPostService {
         dto.setDisclosure(painPost.isDisclosure());
         dto.setAuthor(painPost.getAuthor());
         dto.setSeverity(painPost.getSeverity());
-
+        dto.setViews(painPost.getViews());
+        dto.setId(painPost.getId());
         return dto;
     }
 }
