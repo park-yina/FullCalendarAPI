@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공개된 통증 일기 목록</title>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <h2>공개된 통증 일기 목록</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>날짜</th>
+            <th>시작 시간</th>
+            <th>종료 시간</th>
+            <th>약 복용 여부</th>
+            <th>예방약 복용 여부</th>
+            <th>복용 약 이름</th>
+            <th>작성자</th>
+            <th>통증 강도</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="painPost : ${disclosedPainPosts}">
+            <td th:text="${painPost.date}"></td>
+            <td th:text="${painPost.start}"></td>
+            <td th:text="${painPost.end}"></td>
+            <td th:text="${painPost.pill ? '복용' : '미복용'}"></td>
+            <td th:text="${painPost.pre_pill ? '예방약 복용' : '예방약 미복용'}"></td>
+            <td th:text="${painPost.pill_name}"></td>
+            <td th:text="${painPost.author}"></td>
+            <td th:text="${painPost.severity}"></td>
+            <td th:text="${painPost.views}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/bootstrap.min.js}"></script>
+</body>
+</html>

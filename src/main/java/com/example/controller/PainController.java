@@ -94,10 +94,15 @@ public class PainController {
         painPost.setUser(user); // UserEntity 설정
         painPost.setContent(painPostDTO.getContent());
         painPost.setDate(painPostDTO.getDate());
-        painPost.setPill(painPostDTO.isPill());
-        painPost.setPill_name(painPostDTO.getPill_name());
-        painPost.setSeverity(painPostDTO.getSeverity());
 
+        painPost.setPill(painPostDTO.isPill());
+        painPost.setPre_pill(painPostDTO.isPre_pill());
+        painPost.setDisclosure(painPostDTO.isDisclosure());
+
+        painPost.setPill_name(painPostDTO.getPill_name());
+
+        painPost.setViews(painPostDTO.getViews());
+        painPost.setSeverity(painPostDTO.getSeverity());
         String startTimeStr = painPostDTO.getStart();
         String endTimeStr = painPostDTO.getEnd();
 
@@ -158,7 +163,7 @@ public class PainController {
         dto.setPre_pill(painPost.isPre_pill());
         dto.setDisclosure(painPost.isDisclosure());
         dto.setPill_name(painPost.getPill_name());
-
+        dto.setViews(painPost.getViews());
         dto.setSeverity(painPost.getSeverity());
         dto.setAuthor(painPost.getAuthor());
         return dto;

@@ -1,6 +1,7 @@
 package com.example.dto;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Max;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +20,7 @@ public class PainPostDTO {
     private String author;
     @Max(10)
     private int severity;
+
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private Long views;
 }

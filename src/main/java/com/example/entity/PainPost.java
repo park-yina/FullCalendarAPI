@@ -31,4 +31,9 @@ public class PainPost {
     private String author;
     @Max(10)
     private int severity;
+
+    @Column(columnDefinition = "integer default 0")
+    private Long views=0L;
+
+
 }

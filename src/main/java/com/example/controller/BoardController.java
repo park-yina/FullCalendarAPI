@@ -1,10 +1,12 @@
 package com.example.controller;
 
+import com.example.dto.PainPostDTO;
 import com.example.dto.PostDTO;
 import com.example.dto.UserEditDTO;
 import com.example.entity.PostEntity;
 import com.example.repository.PostRepository;
 import com.example.service.BoardService;
+import com.example.service.PainPostService;
 import com.example.service.UserService;
 import com.example.util.CommonUtil;
 import com.example.util.ImgUtil;
@@ -34,7 +36,7 @@ public class BoardController {
     private final UserService userService;
     private final PostRepository postRepository;
     private final CommonUtil commonUtil;
-
+    private final PainPostService painPostService;
     @GetMapping("")
     public String board(HttpSession session) {
         Object username=session.getAttribute("username");
@@ -49,10 +51,15 @@ public class BoardController {
     @GetMapping("/{boardType}")
     public String getBoardPosts(@PathVariable("boardType") String boardType, Model model) {
         model.addAttribute("boardType", boardType);
-
-        List<PostEntity> posts = postRepository.findByBoardType(boardType);
-        model.addAttribute("posts", posts);
-
+        if(boardType.equals("notice")) {
+            List<PostEntity> posts = postRepository.findByBoardType(boardType);
+            model.addAttribute("posts", posts);
+        }
+        else if (boardType.equals("pain")) {
+            List<PainPostDTO> disclosedPainPosts = painPostService.getAllDisclosedPainPosts();
+            model.addAttribute("disclosedPainPosts", disclosedPainPosts);
+            return "disclosed_pain_posts"; // 공개된 통증 일기 목록을 보여줄 뷰
+        }
 
         return "detail_board";
     }
@@ -60,30 +67,26 @@ public class BoardController {
 
     @GetMapping("/post/{boardType}")
     public String showPost(@PathVariable("boardType") String boardType, Model model, HttpSession session) {
-        Object username=session.getAttribute("username");
-        if(username==null) {
+        Object username = session.getAttribute("username");
+        if (username == null) {
             return "redirect:/user/login";
-        }
-        else {
+        } else {
             model.addAttribute("boardType", boardType);
 
-            model.addAttribute("postDTO", new PostDTO());
-//
-//        }
-            if(boardType.equals("notice")){
-                if(username.equals("kln99988@naver.com")){
+            if (boardType.equals("notice")) {
+                if (username.equals("kln99988@naver.com")) {
+                    model.addAttribute("postDTO", new PostDTO());
                     return "new_post";
-                }
-                else{
-                    model.addAttribute("error","공지 게시판은 운영자만 사용가능합니다.");
+                } else {
+                    model.addAttribute("error", "공지 게시판은 운영자만 사용가능합니다.");
                     return "error";
                 }
             }
 
+            model.addAttribute("postDTO", new PostDTO());
             return "new_post";
         }
     }
-
 
     @PostMapping("/post/{boardType}")
     public String createPostForABoard(@PathVariable("boardType") String boardType,
@@ -112,6 +115,7 @@ public class BoardController {
             LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
             postEntity.setCreatedDate(now);
             postEntity.setUpdatedDate(now);
+            postEntity.setViews(0L);
             // 게시물 저장
             postRepository.save(postEntity);
 
