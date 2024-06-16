@@ -9,9 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +36,72 @@ public class MyPainController {
         model.addAttribute("posts", painPosts);
         return "MyPain"; // 이 부분은 뷰 파일의 이름입니다.
     }
+    @GetMapping("/edit/{painPostId}")
+
+    public String editMypain(@PathVariable("painPostId") Long painPostId, Model model) {
+        Optional<PainPost> optionalPainPost = painRepository.findById(painPostId);
+
+        if (optionalPainPost.isPresent()) {
+            PainPost painPost = optionalPainPost.get();
+            model.addAttribute("painPost", painPost);
+            return "editPainPost"; // 수정 폼 페이지로 이동
+        } else {
+            model.addAttribute("error","정보를 불러오는 데에 실패했습니다.");
+            return "error"; // 게시물이 없으면 에러 페이지로 리다이렉트
+        }
+    }
+    @GetMapping("/delete/{painPostId}")
+    public String deletePainPost(@PathVariable("painPostId")Long painPostId,Model model,HttpSession session){
+        Optional<PainPost> optionalPainPost = painRepository.findById(painPostId);
+        if(optionalPainPost.isPresent()){
+            painRepository.deleteById(painPostId);
+            // Redirect to a success page or to the edited painPost details page
+            String username = String.valueOf(session.getAttribute("username"));
+
+            // 리다이렉트 URL에 동적으로 username 전달
+            return "redirect:/my/?username=" + username;
+
+        }
+        else{
+            model.addAttribute("error","게시물 찾기 실패");
+            return "error";
+        }
+    }
+
+    @PostMapping("/edit/{painPostId}")
+    public String editPostMypain(@PathVariable("painPostId") Long painPostId, @ModelAttribute("painPost") PainPost updatedPainPost, Model model,HttpSession session) {
+        Optional<PainPost> optionalPainPost = painRepository.findById(painPostId);
+
+        if (optionalPainPost.isPresent()) {
+            PainPost painPost = optionalPainPost.get();
+
+            painPost.setDate(updatedPainPost.getDate());
+            painPost.setStart(updatedPainPost.getStart());
+            if(updatedPainPost.getEnd()==null||updatedPainPost.getEnd().isBlank()){
+                updatedPainPost.setEnd("종일");
+            }
+            painPost.setViews(painPost.getViews());
+            painPost.setEnd(updatedPainPost.getEnd());
+            painPost.setContent(updatedPainPost.getContent());
+            painPost.setPill(updatedPainPost.isPill());
+            painPost.setPre_pill(updatedPainPost.isPre_pill());
+            painPost.setDisclosure(updatedPainPost.isDisclosure());
+            painPost.setPill_name(updatedPainPost.getPill_name());
+            painPost.setSeverity(updatedPainPost.getSeverity());
+            // Save the updated painPost to the repository
+            painRepository.save(painPost);
+
+            // Redirect to a success page or to the edited painPost details page
+            String username = String.valueOf(session.getAttribute("username"));
+
+            // 리다이렉트 URL에 동적으로 username 전달
+            return "redirect:/my/?username=" + username;
+        } else {
+            model.addAttribute("error","정보를 불러오는 데에 실패했습니다.");
+            return "error"; // 게시물이 없으면 에러 페이지로 리다이렉트
+        }
+    }
+
         @GetMapping("/post/details")
         public String myDetailPost(@RequestParam("id") Long postId, @RequestParam("userId") Long userId, Model model, HttpSession session) {
             if (!session.getAttribute("userId").equals(userId)) {
@@ -55,7 +119,6 @@ public class MyPainController {
                     String duration = painPostService.calculateDuration(painPost);
                     model.addAttribute("duration", duration);
                 }
-
                 return "PainPostDetails"; // 뷰 파일 이름
             } else {
                 model.addAttribute("error","게시물이 없습니다.");

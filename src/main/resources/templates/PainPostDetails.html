@@ -16,11 +16,10 @@
     <p>예방약 복용 여부: <span th:text="${painPost.pre_pill ? '예방약 복용' : '예방약 미복용'}"></span></p>
     <p>복용 약 이름: <span th:text="${painPost.pill_name}"></span></p>
     <p>통증 정도: <span th:text="${painPost.severity}"></span></p>
-    <p>비고: <span th:text="${painPost.content}"></span></p> <!-- 내용 정보도 포함 -->
+    <p>비고: <span th:text="${painPost.content}"></span></p>
     <p>지속 시간: <span th:text="${duration}"></span></p>
-    <a th:href="@{/my/?username={username}(username=${session.username})}" class="btn btn-primary">목록으로 돌아가기</a>
+    <a th:href="@{/my/?username=${session.username}}" class="btn btn-primary">목록으로 돌아가기</a>
+    <a th:href="@{/my/edit/{painPostId}(painPostId=${painPost.id})}" class="btn btn-primary">게시물 수정</a>
+    <a th:href="@{/my/delete/{painPostId}(painPostId=${painPost.id})}" class="btn btn-danger">게시물 삭제</a>
 
 </div>
-<script th:src="@{/bootstrap.min.js}"></script>
-</body>
-</html>
