@@ -25,7 +25,7 @@ public class SocialController {
                              @RequestParam(value = "state", required = false) String state,
                              Model model) throws Exception {
         if (code == null || state == null) {
-            return "redirect:/oauth2/authorization/naver";
+            return "redirect:/nid.naver.com/oauth2.0/authorize";
         } else {
             String redirectURI = "http://localhost:8080/login/naver";
 
@@ -34,6 +34,7 @@ public class SocialController {
 
             // Access Token을 사용하여 네이버 사용자 정보 가져오기
             String naverProfile = naverService.getNaverProfile(accessToken);
+            System.out.println("Naver Profile: " + naverProfile);
 
             // 가져온 프로필 정보에서 닉네임(nickname) 추출
             String nickname = naverService.extractNicknameFromNaverProfile(naverProfile);
