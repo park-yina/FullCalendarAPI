@@ -23,7 +23,12 @@ public class SpringSecurity {
         http
             .authorizeRequests(authorize -> authorize
                 .requestMatchers("/**").permitAll() // 그 외 모든 요청은 권한 없이 접근 허용
-            );
+            )
+                .oauth2Login(oauth2Login ->
+                        oauth2Login
+                                .loginPage("/login/naver")
+                                .defaultSuccessUrl("/", true)
+                );
         return http.build();
     }
 }

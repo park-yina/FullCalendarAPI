@@ -23,7 +23,6 @@ public class UserEntity {
     @Email(message = "유효한 이메일 주소를 입력해주세요.")
     private String username; // 이것이 실질적인 아이디의 역할을 할 것입니다.
 
-    @Column(nullable = false)
     @Size(min = 8, message = "비밀번호는 최소 8자 이상이어야 합니다.")
     private String password;
 
