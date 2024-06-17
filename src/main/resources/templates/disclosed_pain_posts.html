@@ -23,8 +23,8 @@
             <th>조회수</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="painPost : ${disclosedPainPosts}">
+        <tbody id="post-tbody">
+        <tr th:each="painPost : ${disclosedPainPosts}" th:data-post-id="${painPost.id}" th:data-severity="${painPost.severity}">
             <td th:text="${painPost.date}"></td>
             <td th:text="${painPost.start}"></td>
             <td th:text="${painPost.end}"></td>
@@ -37,7 +37,53 @@
         </tr>
         </tbody>
     </table>
+    <div id="userInfo" th:data-userId="${userId}" hidden></div>
 </div>
 <script th:src="@{/bootstrap.min.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tbody = document.getElementById('post-tbody');
+        var rows = tbody.getElementsByTagName('tr');
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var severity = row.getAttribute('data-severity');
+
+            // 통증 정도에 따라 스타일 클래스 추가
+            if (severity >= 0 && severity <= 3) {
+                row.classList.add('severity-low');
+            } else if (severity >= 4 && severity <= 6) {
+                row.classList.add('severity-moderate');
+            } else if (severity >= 7 && severity <= 9) {
+                row.classList.add('severity-high');
+            } else if (severity == 10) {
+                row.classList.add('severity-very-high');
+            }
+        }
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tbody = document.getElementById('post-tbody');
+        var rows = tbody.getElementsByTagName('tr');
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+
+            // 클릭 이벤트 리스너 추가
+            row.addEventListener('click', function() {
+                // 데이터 가져오기
+                var postId = this.getAttribute('data-post-id'); // 포스트 ID 가져오기
+
+                var userId = document.getElementById('userInfo').getAttribute('data-userId'); // 사용자 ID 가져오기
+
+                // URL 생성 및 이동
+                var url = '/post/details?id=' + postId;
+                window.location.href = url;
+            });
+        }
+    });
+</script>
 </body>
 </html>
+

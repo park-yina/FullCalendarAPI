@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>게시물 상세 정보</title>
+    <title>공개 게시물 상세 정보</title>
     <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
@@ -18,7 +18,5 @@
     <p>통증 정도: <span th:text="${painPost.severity}"></span></p>
     <p>비고: <span th:text="${painPost.content}"></span></p>
     <p>지속 시간: <span th:text="${duration}"></span></p>
-    <a th:href="@{/my/edit/{painPostId}(painPostId=${painPost.id})}" class="btn btn-primary">게시물 수정</a>
-    <a th:href="@{/my/delete/{painPostId}(painPostId=${painPost.id})}" class="btn btn-danger">게시물 삭제</a>
 
 </div>

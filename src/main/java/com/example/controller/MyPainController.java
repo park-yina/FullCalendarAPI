@@ -106,7 +106,6 @@ public class MyPainController {
             if (!session.getAttribute("userId").equals(userId)) {
                 return "redirect:/"; // 본인이 쓴 게시물이 아닌 경우 메인 화면으로 이동
             }
-
             Optional<PainPost> optionalPainPost = painPostService.checkPainPost(postId);
             if (optionalPainPost.isPresent()) {
                 PainPost painPost = optionalPainPost.get();

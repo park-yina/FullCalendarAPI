@@ -4,6 +4,7 @@ import com.example.dto.PainPostDTO;
 import com.example.entity.PainPost;
 import com.example.repository.PainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class PainPostService {
     @Autowired
     private PainRepository painRepository;
+
     public Optional<PainPost> checkPainPost(Long postId) {
         return painRepository.findById(postId);
     }
@@ -31,6 +33,7 @@ public class PainPostService {
             return hours + "시간 " + minutes + "분";
         }
     }
+
     public List<PainPostDTO> getAllDisclosedPainPosts() {
         List<PainPost> painPosts = painRepository.findByDisclosure(true);
         return painPosts.stream()
