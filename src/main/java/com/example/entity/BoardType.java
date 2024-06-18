@@ -1,5 +1,5 @@
 package com.example.entity;
 
 public enum BoardType {
-    notice,
+    notice,qna
 }

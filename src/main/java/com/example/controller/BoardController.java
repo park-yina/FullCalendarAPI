@@ -61,6 +61,7 @@ public class BoardController {
             return "disclosed_pain_posts"; // 공개된 통증 일기 목록을 보여줄 뷰
         }
 
+
         return "detail_board";
     }
 
