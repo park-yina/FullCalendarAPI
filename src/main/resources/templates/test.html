@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>네이버 로그인 성공</title>
+    <title>프로필 정보 입력</title>
     <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
     <style>
         body {
@@ -26,16 +26,38 @@
         .card p {
             font-size: 18px;
         }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="card">
-        <h1>네이버 로그인 성공</h1>
-        <p><strong>닉네임:</strong> <span th:text="${nickname}"></span></p>
-        <a th:href="@{/}" class="btn btn-primary">홈으로 돌아가기</a>
+        <h1>프로필 정보 입력</h1>
+        <form th:action="@{/login/profile/save}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nickname">닉네임</label>
+                <input type="text" id="nickname" name="nickname" th:value="${nickname}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" th:value="${email}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label for="profileImage">프로필 사진</label>
+                <input type="file" id="profileImage" name="profileImage" class="form-control-file">
+            </div>
+            <button type="submit" class="btn btn-primary">저장하기</button>
+        </form>
+        <a th:href="@{/}" class="btn btn-secondary mt-3">홈으로 돌아가기</a>
     </div>
 </div>
 <script th:src="@{/bootstrap.min.js}"></script>
 </body>
 </html>
+
