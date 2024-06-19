@@ -45,7 +45,9 @@
         </div>
     </div>
     <a th:href="@{|/board/${post.boardType}|}" class="btn btn-primary">게시판으로 돌아가기</a>
+    <!-- 게시물 수정 버튼 -->
     <a th:href="@{|/board/qna/edit/${post.id}|}" class="btn btn-warning">수정</a>
+    <!-- 게시물 삭제 버튼 -->
     <form th:action="@{|/board/delete/${post.id}|}" method="post" style="display: inline;">
         <button type="submit" class="btn btn-danger">삭제</button>
     </form>
@@ -54,14 +56,16 @@
     <div th:if="${#lists.isEmpty(answer)}">
         <p>답변이 없습니다.</p>
     </div>
-    <a th:href="@{|/board/answer/post/${post.id}|}" class="btn btn-warning">답변 작성하기</a>
     <div class="post-content">
-        <ul>
-            <li th:each="ans : ${answer}">
-                <p><strong>작성자:</strong> <span th:text="${ans.author}"></span></p>
-                <p><strong>작성일:</strong> <span th:text="${#temporals.format(ans.createdDate, 'yyyy-MM-dd HH:mm')}"></span></p>
-                <p th:utext="${@commonUtil.markdown(ans.content)}"></p>
-                <hr>
+        <ul class="list-unstyled">
+            <li th:each="ans : ${answer}" class="card mb-3">
+                <div class="card-body">
+                    <p class="card-title"><strong>작성자:</strong> <span th:text="${ans.author}"></span></p>
+                    <p class="card-subtitle mb-2 text-muted"><strong>작성일:</strong> <span th:text="${#temporals.format(ans.createdDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+                    <p class="card-text"><strong>좋아요:</strong> <span th:text="${ans.likes}"></span></p>
+                    <p class="card-text" th:utext="${@commonUtil.markdown(ans.content)}"></p>
+                    <a href="@{/board/likes/{id}(id=${ans.id})}" class="btn-gradient red mini">좋아요👍🏻</a>
+                </div>
             </li>
         </ul>
     </div>

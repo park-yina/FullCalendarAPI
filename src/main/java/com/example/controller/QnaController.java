@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.AnswerDTO;
 import com.example.dto.UserEditDTO;
 import com.example.entity.AnswerEntity;
 import com.example.entity.PostEntity;
@@ -82,113 +83,91 @@ public class QnaController {
         }
     }
     @GetMapping("/qna/{postId}")
-    public String viewPostDetail(
-            @PathVariable("postId") Long postId, Model model) {
+    public String viewPostDetail(@PathVariable("postId") Long postId, Model model) {
         Optional<QuestionEntity> postEntityOptional = questionRepository.findById(postId);
-        if(postEntityOptional.isPresent()){
-            QuestionEntity questionEntity=postEntityOptional.get();
+        if (postEntityOptional.isPresent()) {
+            QuestionEntity questionEntity = postEntityOptional.get();
             String profileBase64 = null;
-            String photo2=null;
-            String photo3=null;
-            if (questionEntity.getPhoto1()!=null) {
+            String photo2 = null;
+            String photo3 = null;
+
+            if (questionEntity.getPhoto1() != null) {
                 try {
-                    profileBase64 = ImgUtil.resizeImage(questionEntity.getPhoto1(), 100, 100); // 원하는 크기로 조정합니다.
+                    profileBase64 = ImgUtil.resizeImage(questionEntity.getPhoto1(), 100, 100);
                 } catch (IOException e) {
                     logger.error("이미지 크기 조정 중 오류 발생", e);
                 }
             }
-            if(questionEntity.getPhoto2()!=null){
-                try{
-                    photo2=ImgUtil.resizeImage(questionEntity.getPhoto2(), 100, 100); // 원하는 크기로 조정합니다.
-                }
-                catch (IOException e){
-                    logger.error("이미지 크기 조절 중 오류발생",e);
-                }
-            }
-            if(questionEntity.getPhoto3()!=null){
-                try{
-                    photo3=ImgUtil.resizeImage(questionEntity.getPhoto3(), 100, 100); // 원하는 크기로 조정합니다.
-                }
-                catch (IOException e){
-                    logger.error("이미지 크기 조절 중 오류발생",e);
+            if (questionEntity.getPhoto2() != null) {
+                try {
+                    photo2 = ImgUtil.resizeImage(questionEntity.getPhoto2(), 100, 100);
+                } catch (IOException e) {
+                    logger.error("이미지 크기 조절 중 오류 발생", e);
                 }
             }
-            questionEntity.setViews(questionEntity.getViews()+1);
+            if (questionEntity.getPhoto3() != null) {
+                try {
+                    photo3 = ImgUtil.resizeImage(questionEntity.getPhoto3(), 100, 100);
+                } catch (IOException e) {
+                    logger.error("이미지 크기 조절 중 오류 발생", e);
+                }
+            }
+
+            questionEntity.setViews(questionEntity.getViews() + 1);
             questionRepository.save(questionEntity);
-            List<AnswerEntity> answer;
-            answer=answerRepository.findByQuestion(questionEntity);
-            model.addAttribute("post",questionEntity);
+
+            List<AnswerEntity> answer = answerRepository.findByQuestion(questionEntity);
+            model.addAttribute("post", questionEntity);
             model.addAttribute("profileBase64", profileBase64);
             model.addAttribute("photo2", photo2);
             model.addAttribute("photo3", photo3);
-            model.addAttribute("answer",answer);
-
+            model.addAttribute("answer", answer);
             return "detail_question";
-        }
-        else{
-            model.addAttribute("error","게시물을 찾을 수 없습니다.");
-            return "error"; // 또는 다른 적절한 처리 수행
-        }
-    }
-    @GetMapping("/qna/edit/{postId}")
-    public String getEdit(@PathVariable("postId") Long postId, Model model, HttpSession session){
-        Optional<QuestionEntity>questionEntityOptional=questionRepository.findById(postId);
-        if(questionEntityOptional.isPresent()){
-            String username=questionEntityOptional.get().getUsername();
-            String username2=String.valueOf(session.getAttribute("username"));
-            if(!username.equals(username2)){
-                model.addAttribute("error","자신이 수정 가능합니다.");
-                return "error";
-            }
-            else{
-                QuestionEntity questionEntity=questionEntityOptional.get();
-                model.addAttribute("post", questionEntity);
-                String profileBase64 = null;
-                if (questionEntity.getPhoto1() != null) {
-                    try {
-                        profileBase64 = ImgUtil.resizeImage(questionEntity.getPhoto1(), 100, 100); // 원하는 크기로 조정합니다.
-                    } catch (IOException e) {
-                        logger.error("이미지 크기 조정 중 오류 발생", e);
-                    }
-                }
-                String photo2=null;
-                if(questionEntity.getPhoto2()!=null){
-                    try {
-                        photo2 = ImgUtil.resizeImage(questionEntity.getPhoto2(), 100, 100); // 원하는 크기로 조정합니다.
-                    } catch (IOException e) {
-                        logger.error("이미지 크기 조정 중 오류 발생", e);
-                    }
-                }
-                String photo3=null;
-                if(questionEntity.getPhoto3()!=null){
-                    try {
-                        photo3 = ImgUtil.resizeImage(questionEntity.getPhoto3(), 100, 100); // 원하는 크기로 조정합니다.
-                    } catch (IOException e) {
-                        logger.error("이미지 크기 조정 중 오류 발생", e);
-                    }
-                }
-                model.addAttribute("profileBase64", profileBase64);
-                model.addAttribute("photo2",photo2);
-                model.addAttribute("photo3",photo3);
-                return "modifyQuestion";
-            }
-        }
-        else{
-            model.addAttribute("error","해당 게시물이 없습니다");
-            return "error";
+        } else {
+            model.addAttribute("error", "게시물이 없습니다.");
+            return "error"; // 게시물이 없으면 에러 페이지로 리다이렉트
         }
     }
+
     @GetMapping("/answer/post/{postId}")
-    public String postAnswer(HttpSession session, @PathVariable("postId")Long postId,Model model) {
-        String username=String.valueOf(session.getAttribute("username"));
-        if(username==null){
+    public String postAnswer(HttpSession session, @PathVariable("postId") Long postId, Model model) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
             return "redirect:/user/login";
-        }
-        else{
-            model.addAttribute("postId",postId);
+        } else {
+            model.addAttribute("postId", postId);
+            model.addAttribute("answerDTO", new AnswerDTO());
             return "post_answer";
         }
-
     }
 
+    @PostMapping("/answer/post/{postId}")
+    public String saveAnswer(@PathVariable("postId") Long postId,
+                             @ModelAttribute("answerDTO") AnswerDTO answerDTO,
+                             HttpSession session, Model model) {
+        String username = String.valueOf(session.getAttribute("username"));
+        if (username == null) {
+            return "redirect:/user/login";
+        }
+
+        Optional<QuestionEntity> questionOptional = questionRepository.findById(postId);
+        if (questionOptional.isEmpty()) {
+            model.addAttribute("error", "질문 게시물을 찾을 수 없습니다.");
+            return "error";
+        }
+
+        QuestionEntity question = questionOptional.get();
+        UserEditDTO author = userService.getUserName(username);
+        AnswerEntity answer = new AnswerEntity();
+        answer.setContent(answerDTO.getContent());
+        answer.setAuthor(author.getNickname());
+        answer.setQuestion(question);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        answer.setCreatedDate(now);
+        answer.setUpdatedDate(now);
+
+        answerRepository.save(answer);
+
+        return "redirect:/board/qna";
+    }
 }

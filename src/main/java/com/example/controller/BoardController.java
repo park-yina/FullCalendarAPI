@@ -229,7 +229,7 @@ public class BoardController {
     }
 
 
-    @PostMapping("/delete/{postId}")
+    @PostMapping("notice/delete/{postId}")
     public String deletePost (@PathVariable("postId") Long postId,HttpSession session,Model model) {
         if(session.getAttribute("username")==null) {
             return "redirect:/user/login";
