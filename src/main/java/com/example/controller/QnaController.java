@@ -170,4 +170,24 @@ public class QnaController {
 
         return "redirect:/board/qna";
     }
+    @GetMapping("/qna/likes/{ansId}")
+    public String likeAnswer(@PathVariable("ansId") Long ansId,Model model,HttpSession session){
+        String username=String.valueOf(session.getAttribute("username"));
+        UserEditDTO author = userService.getUserName(username);
+        Optional<AnswerEntity>answerEntityOptional=answerRepository.findById(ansId);
+        if(answerEntityOptional.isPresent()){
+         AnswerEntity answer= answerEntityOptional.get();
+         if(answer.getAuthor().equals(author.getNickname())){
+             model.addAttribute("error","자신이 쓴 답변에는 좋아요가 불가하니다");
+             return "error";
+         }
+         answer.setLikes(answer.getLikes()+1);
+         answerRepository.save(answer);
+        }
+        else{
+            model.addAttribute("error","존재하는 답변이 아닙니다");
+            return "error";
+        }
+        return "redirect:/board/qna";
+    }
 }

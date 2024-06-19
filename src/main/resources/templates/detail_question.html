@@ -57,6 +57,7 @@
         <p>답변이 없습니다.</p>
     </div>
     <div class="post-content">
+        <a th:href="@{|/board/answer/post/${post.id}|}" class="btn-gradient purple large">새 답변 작성하기✏</a>
         <ul class="list-unstyled">
             <li th:each="ans : ${answer}" class="card mb-3">
                 <div class="card-body">
@@ -64,7 +65,7 @@
                     <p class="card-subtitle mb-2 text-muted"><strong>작성일:</strong> <span th:text="${#temporals.format(ans.createdDate, 'yyyy-MM-dd HH:mm')}"></span></p>
                     <p class="card-text"><strong>좋아요:</strong> <span th:text="${ans.likes}"></span></p>
                     <p class="card-text" th:utext="${@commonUtil.markdown(ans.content)}"></p>
-                    <a href="@{/board/likes/{id}(id=${ans.id})}" class="btn-gradient red mini">좋아요👍🏻</a>
+                    <a th:href="@{|/board/qna/likes/${ans.id}|}" class="btn-gradient red mini">좋아요👍🏻</a>
                 </div>
             </li>
         </ul>
