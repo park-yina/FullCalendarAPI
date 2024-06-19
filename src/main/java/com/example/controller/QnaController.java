@@ -8,11 +8,13 @@ import com.example.entity.QuestionEntity;
 import com.example.repository.AnswerRepository;
 import com.example.repository.QuestionRepository;
 import com.example.service.BoardService;
+import com.example.service.QuestionService;
 import com.example.service.UserService;
 import com.example.util.CommonUtil;
 import com.example.util.ImgUtil;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,8 @@ public class QnaController {
     private  final CommonUtil commonUtil;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    @Autowired
+    private  final QuestionService questionService;
     @PostMapping("/post/qna")
     public String createQuestion(
             @RequestParam("title") String title,
@@ -82,6 +86,59 @@ public class QnaController {
             return "error";
         }
     }
+    @GetMapping("/qna/edit/{postId}")
+    public String editPost(@PathVariable("postId") Long postId, Model model, HttpSession session) {
+        String username = String.valueOf(session.getAttribute("username"));
+        if (username == null) {
+            return "redirect:/user/login";
+        }
+        Optional<QuestionEntity> optionalQuestionEntity = questionRepository.findById(postId);
+        if (optionalQuestionEntity.isPresent()) {
+            String profileBase64 = null;
+
+            QuestionEntity question = optionalQuestionEntity.get();
+            if (!question.getUsername().equals(username)) {
+                model.addAttribute("error", "내가 쓴 게시물만 수정 가능합니다.");
+                return "error";
+            } else {
+                model.addAttribute("questionDTO", question);
+            }
+        } else {
+            model.addAttribute("error", "존재하지 않는 질문 게시물입니다.");
+            return "error";
+        }
+        return "modify_question";
+    }
+    @PostMapping("/qna/update/{postId}")
+    public String saveQuestion(@PathVariable("postId") Long postId,
+                               @RequestParam("photo1") MultipartFile photo1,
+                               @RequestParam("photo2") MultipartFile photo2,
+                               @RequestParam("photo3") MultipartFile photo3,
+                               @RequestParam("title") String title,
+                               @RequestParam("content") String content,
+                               HttpSession session) {
+
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            return "redirect:/user/login";
+        }
+
+        try {
+            byte[] photoBytes = photo1.isEmpty() ? null : photo1.getBytes();
+            byte[] photoBytes2 = photo2.isEmpty() ? null : photo2.getBytes();
+            byte[] photoBytes3 = photo3.isEmpty() ? null : photo3.getBytes();
+            String htmlContent = commonUtil.markdown(content);
+
+            questionService.updateQuestion(postId, title, htmlContent, photoBytes, photoBytes2, photoBytes3);
+        } catch (IOException e) {
+            logger.error("파일 업로드 중 오류 발생", e);
+            return "error";
+        }
+
+        return "redirect:/board/qna/" + postId;
+    }
+
+
     @GetMapping("/qna/{postId}")
     public String viewPostDetail(@PathVariable("postId") Long postId, Model model) {
         Optional<QuestionEntity> postEntityOptional = questionRepository.findById(postId);
@@ -170,6 +227,11 @@ public class QnaController {
 
         return "redirect:/board/qna";
     }
+    @PostMapping("/qna/delete/{postId}")
+    public String deleteQuestion(@PathVariable("postId") Long postId){
+        questionService.delete(postId);
+        return "redirect:/board/qna";
+    }
     @GetMapping("/qna/likes/{ansId}")
     public String likeAnswer(@PathVariable("ansId") Long ansId,Model model,HttpSession session){
         String username=String.valueOf(session.getAttribute("username"));
@@ -178,7 +240,7 @@ public class QnaController {
         if(answerEntityOptional.isPresent()){
          AnswerEntity answer= answerEntityOptional.get();
          if(answer.getAuthor().equals(author.getNickname())){
-             model.addAttribute("error","자신이 쓴 답변에는 좋아요가 불가하니다");
+             model.addAttribute("error","자신이 쓴 답변에는 좋아요가 불가합니다.");
              return "error";
          }
          answer.setLikes(answer.getLikes()+1);
@@ -189,5 +251,15 @@ public class QnaController {
             return "error";
         }
         return "redirect:/board/qna";
+    }
+    @GetMapping("/answer/modify/{ansId}")
+    public String modifyAnswer(@PathVariable("ansId")Long ansId,Model model,HttpSession session){
+        String username=String.valueOf(session.getAttribute("username"));
+        if(username==null){
+            return "redirect:/user/login";
+        }
+        Optional<AnswerEntity> answerDTO=answerRepository.findById(ansId);
+        model.addAttribute("answerDTO",answerDTO);
+        return "modify_answer";
     }
 }

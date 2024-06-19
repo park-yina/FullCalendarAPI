@@ -44,12 +44,14 @@
             <img th:attr="src=${'data:image/png;base64,' + photo3}" alt="프로필 사진" class="profile-image">
         </div>
     </div>
-    <a th:href="@{|/board/${post.boardType}|}" class="btn btn-primary">게시판으로 돌아가기</a>
+    <a th:href="@{|/board/${post.boardType}|}" class="btn-gradient purple large">게시판으로 돌아가기</a>
+    <div></div>
     <!-- 게시물 수정 버튼 -->
-    <a th:href="@{|/board/qna/edit/${post.id}|}" class="btn btn-warning">수정</a>
+    <a th:href="@{|/board/qna/edit/${post.id}|}" class="btn-gradient cyan large">수정</a>
+    <div></div>
     <!-- 게시물 삭제 버튼 -->
-    <form th:action="@{|/board/delete/${post.id}|}" method="post" style="display: inline;">
-        <button type="submit" class="btn btn-danger">삭제</button>
+    <form th:action="@{|/board/qna/delete/${post.id}|}" method="post" style="display: inline;">
+        <button type="submit" class="btn-gradient red large">삭제</button>
     </form>
     <hr>
     <h2>답변 목록</h2>
@@ -66,6 +68,9 @@
                     <p class="card-text"><strong>좋아요:</strong> <span th:text="${ans.likes}"></span></p>
                     <p class="card-text" th:utext="${@commonUtil.markdown(ans.content)}"></p>
                     <a th:href="@{|/board/qna/likes/${ans.id}|}" class="btn-gradient red mini">좋아요👍🏻</a>
+                    <div></div>
+                    <a th:href="@{|/board/answer/modify/${ans.id}|}" class="btn-gradient cyan large">답변 수정하기</a>
+
                 </div>
             </li>
         </ul>
