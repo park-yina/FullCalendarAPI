@@ -71,7 +71,8 @@ public class BoardController {
         }
         else if(boardType.equals("qna")){
             List<QuestionEntity> questionPosts = questionRepository.findAll();
-            model.addAttribute("questionPosts", questionPosts);
+            model.addAttribute("posts", questionPosts);
+
         }
 
 
@@ -98,16 +99,15 @@ public class BoardController {
             }
             else if(boardType.equals("qna")){
                 model.addAttribute("questionDTO", new QuestionDTO());
-                return "post_question";
+                return "postQuestion";
             }
 
             model.addAttribute("postDTO", new PostDTO());
             return "new_post";
         }
     }
-
-    @PostMapping("/post/{boardType}")
-    public String createPostForABoard(@PathVariable("boardType") String boardType,
+    @PostMapping("/post/notice")
+    public String createPostForABoard(
                                       @RequestParam("title") String title,
                                       @RequestParam("content") String content,
                                       @RequestParam("photo") MultipartFile photo
@@ -125,7 +125,7 @@ public class BoardController {
             postEntity.setPhoto(profileBytes);
             UserEditDTO author = userService.getUserName(String.valueOf(username));
             postEntity.setAuthor(author.getNickname());
-            postEntity.setBoardType(boardType);
+            postEntity.setBoardType("notice");
             postEntity.setUsername(String.valueOf(username));
             String htmlContent = commonUtil.markdown(postEntity.getContent());
             // HTML로 변환된 내용을 다시 postDTO에 설정
@@ -144,8 +144,8 @@ public class BoardController {
         }
     }
     // findById를 사용한 코드
-    @GetMapping("/{boardType}/{postId}")
-    public String viewPostDetail(@PathVariable("boardType") String boardType,
+    @GetMapping("/notice/{postId}")
+    public String viewPostDetail(
                                  @PathVariable("postId") Long postId, Model model) {
         Optional<PostEntity> postEntityOptional = postRepository.findById(postId);
         if (postEntityOptional.isPresent()) {
@@ -170,7 +170,8 @@ public class BoardController {
             return "redirect:/error"; // 또는 다른 적절한 처리 수행
         }
     }
-    @GetMapping("/edit/{postId}")
+
+    @GetMapping("/notice/edit/{postId}")
     public String getEdit(@PathVariable("postId") Long postId, Model model, HttpSession session) {
         Optional<PostEntity> postEntityOptional = postRepository.findById(postId);
         if (postEntityOptional.isPresent()) {
@@ -196,7 +197,7 @@ public class BoardController {
             return "redirect:/board";
         }
     }
-    @PostMapping("/edit/{postId}")
+    @PostMapping("/notice/edit/{postId}")
     public String updatePost(@PathVariable("postId") Long postId,
                              @RequestParam("title") String title,
                              @RequestParam("content") String content,

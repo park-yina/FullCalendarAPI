@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'게시물 상세 정보 - ' + ${post.title}"></title>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <style>
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 th:text="'게시물 제목: ' + ${post.title}"></h1>
+    <hr>
+    <div class="post-content">
+        <h2>게시물 내용</h2>
+        <div th:utext="${@commonUtil.markdown(post.content)}"></div>
+    </div>
+    <hr>
+    <div class="post-content">
+        <p><strong>마지막 수정일자:</strong> <span th:text="${post.updatedDate}"></span></p>
+    </div>
+    <div class="form-group" th:if="${profileBase64 != null}">
+        <label for="profileImage">첨부사진 1</label>
+        <div>
+            <img th:attr="src=${'data:image/png;base64,' + profileBase64}" alt="프로필 사진" class="profile-image">
+        </div>
+    </div>
+    <div class="form-group" th:if="${photo2 != null}">
+        <label for="profileImage2">첨부사진 2</label>
+        <div>
+            <img th:attr="src=${'data:image/png;base64,' + photo2}" alt="프로필 사진" class="profile-image">
+        </div>
+    </div>
+    <div class="form-group" th:if="${photo3 != null}">
+        <label for="profileImage3">첨부사진 3</label>
+        <div>
+            <img th:attr="src=${'data:image/png;base64,' + photo3}" alt="프로필 사진" class="profile-image">
+        </div>
+    </div>
+    <a th:href="@{|/board/${post.boardType}|}" class="btn btn-primary">게시판으로 돌아가기</a>
+    <!-- 게시물 수정 버튼 -->
+    <a th:href="@{|/board/qna/edit/${post.id}|}" class="btn btn-warning">수정</a>
+    <!-- 게시물 삭제 버튼 -->
+    <form th:action="@{|/board/delete/${post.id}|}" method="post" style="display: inline;">
+        <button type="submit" class="btn btn-danger">삭제</button>
+    </form>
+    <hr>
+    <h2>답변 목록</h2>
+    <div th:if="${#lists.isEmpty(answer)}">
+        <p>답변이 없습니다.</p>
+    </div>
+    <div th:if="${#lists.isNotEmpty(answer)}">
+        <ul>
+            <li th:each="ans : ${answer}">
+                <p><strong>작성자:</strong> <span th:text="${ans.author}"></span></p>
+                <p><strong>작성일:</strong> <span th:text="${#temporals.format(ans.createdDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+                <p th:utext="${@commonUtil.markdown(ans.content)}"></p>
+                <hr>
+            </li>
+        </ul>
+    </div>
+</div>
+<script th:src="@{/bootstrap.min.js}"></script>
+</body>
+</html>

@@ -2,15 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>게시물 수정</title>
+    <title>Q&A 질문 수정</title>
     <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
 <div class="container">
-    <h2>게시물 수정</h2>
+    <h2>질문 수정</h2>
     <hr>
-    <form th:action="@{|/board/notice/edit/${post.id}|}" method="post" enctype="multipart/form-data">
+    <form th:action="@{|/board/notice/qna/${post.id}|}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" class="form-control" id="title" name="title" th:value="${post.title}" required>
@@ -24,6 +24,12 @@
             <input type="file" class="form-control-file" id="photo" name="photo">
             <!-- 현재 게시물의 사진 미리 보기 -->
             <img th:src="@{|data:image/png;base64,${profileBase64}|}" alt="현재 사진" class="profile-image">
+        </div>
+        <div class="form-group">
+            <label for="photo2">첨부 사진2</label>
+            <input type="file" class="form-control-file" id="photo2" name="photo">
+            <!-- 현재 게시물의 사진 미리 보기 -->
+            <img th:src="@{|data:image/png;base64,${photo2}|}" alt="현재 사진" class="profile-image">
         </div>
         <button type="submit" class="btn btn-primary">저장</button>
     </form>

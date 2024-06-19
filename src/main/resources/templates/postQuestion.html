@@ -2,36 +2,67 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Q&A 게시판</title>
+    <title>새 질문 게시물 작성</title>
     <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="file"] {
+            padding: 3px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <h2>Q&A 게시물 목록</h2>
-    <div th:if="${#lists.isEmpty(questionPosts)}">
-        <p>게시물이 없습니다.</p>
-    </div>
-    <table class="table" th:if="${#lists.isNotEmpty(questionPosts)}">
-        <thead>
-        <tr>
-            <th>작성 날짜</th>
-            <th>수정 날짜</th>
-            <th>작성자</th>
-            <th>제목</th>
-            <th>조회수</th>
-        </tr>
-        </thead>
-        <tbody id="post-tbody">
-        <tr th:each="question : ${questionPosts}" th:data-post-id="${question.id}">
-            <td th:text="${#temporals.format(question.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
-            <td th:text="${#temporals.format(question.updatedDate, 'yyyy-MM-dd HH:mm')}"></td>
-            <td th:text="${question.author}"></td>
-            <td th:text="${question.title}"></td>
-            <td th:text="${question.views}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <h2>새 질문 게시물 작성</h2>
+    <form th:action="@{/board/post/qna}" th:object="${questionDTO}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" th:field="*{title}" required>
+        </div>
+        <div class="form-group">
+            <label for="content">내용</label>
+            <textarea id="content" name="content" th:field="*{content}" rows="8" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="photo1">사진 1</label>
+            <input type="file" id="photo1" name="photo1" th:field="*{photo1}">
+        </div>
+        <div class="form-group">
+            <label for="photo2">사진 2</label>
+            <input type="file" id="photo2" name="photo2" th:field="*{photo2}">
+        </div>
+        <div class="form-group">
+            <label for="photo3">사진 3</label>
+            <input type="file" id="photo3" name="photo3" th:field="*{photo3}">
+        </div>
+        <button type="submit" class="btn btn-primary">저장하기</button>
+    </form>
+    <a th:href="@{/board?boardType=qna}" class="btn btn-secondary mt-3">취소</a>
 </div>
 <script th:src="@{/bootstrap.min.js}"></script>
 </body>

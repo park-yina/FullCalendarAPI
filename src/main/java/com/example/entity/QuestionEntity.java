@@ -42,7 +42,13 @@ public class QuestionEntity {
 
     private String boardType;
     private String author;
+    @Column(length = 300)
+    private String title;
 
+    @Column(length = 100000)
+    private String content;
+
+    private String username;
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdDate;

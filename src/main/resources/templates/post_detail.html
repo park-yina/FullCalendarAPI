@@ -33,7 +33,7 @@
         <a th:href="@{|/board/${post.boardType}|}" class="btn btn-primary">게시판으로 돌아가기</a>
 
         <!-- 게시물 수정 버튼 -->
-        <a th:href="@{|/board/edit/${postId}|}" class="btn btn-warning">수정</a>
+        <a th:href="@{|/board/notice/edit/${postId}|}" class="btn btn-warning">수정</a>
 
         <!-- 게시물 삭제 버튼 -->
         <form th:action="@{|/board/delete/${postId}|}" method="post" style="display: inline;">
