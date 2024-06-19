@@ -2,11 +2,17 @@ package com.example.controller;
 
 import com.example.dto.PainPostDTO;
 import com.example.dto.PostDTO;
+import com.example.dto.QuestionDTO;
 import com.example.dto.UserEditDTO;
+import com.example.entity.AnswerEntity;
 import com.example.entity.PostEntity;
+import com.example.entity.QuestionEntity;
+import com.example.repository.AnswerRepository;
 import com.example.repository.PostRepository;
+import com.example.repository.QuestionRepository;
 import com.example.service.BoardService;
 import com.example.service.PainPostService;
+import com.example.service.QuestionService;
 import com.example.service.UserService;
 import com.example.util.CommonUtil;
 import com.example.util.ImgUtil;
@@ -37,6 +43,9 @@ public class BoardController {
     private final PostRepository postRepository;
     private final CommonUtil commonUtil;
     private final PainPostService painPostService;
+    private final QuestionService questionService;
+    private final AnswerRepository answerRepository;
+    private final QuestionRepository questionRepository;
     @GetMapping("")
     public String board(HttpSession session) {
         Object username=session.getAttribute("username");
@@ -60,6 +69,10 @@ public class BoardController {
             model.addAttribute("disclosedPainPosts", disclosedPainPosts);
             return "disclosed_pain_posts"; // 공개된 통증 일기 목록을 보여줄 뷰
         }
+        else if(boardType.equals("qna")){
+            List<QuestionEntity> questionPosts = questionRepository.findAll();
+            model.addAttribute("questionPosts", questionPosts);
+        }
 
 
         return "detail_board";
@@ -82,6 +95,10 @@ public class BoardController {
                     model.addAttribute("error", "공지 게시판은 운영자만 사용가능합니다.");
                     return "error";
                 }
+            }
+            else if(boardType.equals("qna")){
+                model.addAttribute("questionDTO", new QuestionDTO());
+                return "post_question";
             }
 
             model.addAttribute("postDTO", new PostDTO());

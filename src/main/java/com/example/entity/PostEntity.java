@@ -30,6 +30,7 @@ public class PostEntity {
     @Basic(fetch = FetchType.LAZY)
     @Column(length=300000)
     private byte[] photo;
+
     @Column(columnDefinition = "integer default 0")
     private Long views=0L;
     private String boardType;

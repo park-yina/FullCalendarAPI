@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Q&A 게시판</title>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <h2>Q&A 게시물 목록</h2>
+    <div th:if="${#lists.isEmpty(questionPosts)}">
+        <p>게시물이 없습니다.</p>
+    </div>
+    <table class="table" th:if="${#lists.isNotEmpty(questionPosts)}">
+        <thead>
+        <tr>
+            <th>작성 날짜</th>
+            <th>수정 날짜</th>
+            <th>작성자</th>
+            <th>제목</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody id="post-tbody">
+        <tr th:each="question : ${questionPosts}" th:data-post-id="${question.id}">
+            <td th:text="${#temporals.format(question.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(question.updatedDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${question.author}"></td>
+            <td th:text="${question.title}"></td>
+            <td th:text="${question.views}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/bootstrap.min.js}"></script>
+</body>
+</html>

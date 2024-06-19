@@ -1,23 +1,20 @@
-package com.example.entity;
+package com.example.dto;
 
 import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Lob;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
-@Entity
-public class QuestionEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class QuestionDTO {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
@@ -37,12 +34,15 @@ public class QuestionEntity {
     @Nullable
     private byte[] photo3;
 
-    @Column(columnDefinition = "integer default 0")
-    private Long views = 0L;
+    private Long views ;
 
     private String boardType;
     private String author;
+    @Column(length=300)
+    private String title;
+    @Column(length=100000)
 
+    private String content;
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdDate;
@@ -51,6 +51,4 @@ public class QuestionEntity {
     private LocalDateTime updatedDate;
 
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AnswerEntity> answers = new ArrayList<>();
 }
