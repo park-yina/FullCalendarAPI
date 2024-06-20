@@ -259,6 +259,11 @@ public class QnaController {
             return "redirect:/user/login";
         }
         Optional<AnswerEntity> answerDTO=answerRepository.findById(ansId);
+        UserEditDTO author = userService.getUserName(username);
+        if(!answerDTO.get().getAuthor().equals(author)){
+            model.addAttribute("error","자신이 쓴 댓글만 수정가능합니다.");
+            return "error";
+        }
         model.addAttribute("answerDTO",answerDTO);
         return "modify_answer";
     }
